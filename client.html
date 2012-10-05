@@ -1,38 +1,13 @@
 <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<script src="lib/webtcp.js"></script>
 
 <script>
 
- var WebTCP = function(host, port) {
-    
-    this.sock = new SockJS("http://" + host + ":"+ port +"/bridge");
-
-     this.sock.onopen = function() {
-         console.log('open');
-     };
-     this.sock.onmessage = function(e) {
-         console.log(e.data);
-     };
-     this.sock.onclose = function() {
-         console.log('close');
-     };
-
-     this.Socket = function() {
-
-     }
- }
-
- WebTCP.prototype.write = function(data) {
-    this.sock.send( JSON.stringify(data) );
- }
-
-// test redis command
-msg = { 
-  host:  "localhost", 
-  port:  6379, 
-  data:  "*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n"
-}
+var redis_str = "*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n";
 
 var net = new WebTCP('localhost', 9999);
+var socket = new net.Socket("localhost", 6379);
+
 
 // should be 
 // var net = new WebTCP('localhost', 9999);
