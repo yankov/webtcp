@@ -1,0 +1,33 @@
+{
+  "name": "webtcp",
+  "description": "SockJS/TCP bridge that allows browsers to interact with TCP servers",
+  "version": "0.0.1",
+  "homepage": "https://github.com/yankov/webtcp",
+  "author": "Artem Yankov <artem.yankov@gmail.com> (http://artemyankov.com)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yankov/webtcp.git"
+  },
+  "dependencies": {
+    "sockjs": "0.3.3"
+  },
+  "bugs": {
+    "url": "http://github.com/yankov/webtcp/issues"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/yankov/webtcp/raw/master/LICENSE"
+    }
+  ],
+  "main": "webtcp",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    ""
+  ]
+}
