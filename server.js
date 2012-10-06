@@ -37,6 +37,7 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   })(this));
 
   // when message comes from a browser client 
+  // write it to socket
   this.onClientData = (function(that) { return function(data) {
       if (data == "CLOSE") {
         // this.client.end();
@@ -46,9 +47,13 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
       }
     }})(this);
 
-  // this.client.on('end', function() {
-  //   console.log('client disconnected');
-  // });
+  // notify browser about closed socket
+  this.client.on('end', (function(that) { 
+    return function(data) {
+      that.respond( "CLOSE" );
+    }
+  })(this));
+
 }
 
 var echo = sockjs.createServer();
