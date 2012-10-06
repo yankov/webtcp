@@ -43,7 +43,7 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
       this.client.write(data.data);
     }
   }
-  
+
   // this.client.on('end', function() {
   //   console.log('client disconnected');
   // });
