@@ -10,15 +10,12 @@ var net = new WebTCP('localhost', 9999);
 var socket = new net.Socket("localhost", 6379);
 var socket2 = new net.Socket("127.0.0.1", 1337);
 
+socket.ondata = function(data) {
+  console.log("Socket1: " + data);
+}
 
-// should be 
-// var net = new WebTCP('localhost', 9999);
-// var socket = new net.Socket("host.com", "6379", options)
-// socket.connect()
-// socket.write(data)
-// socket.end()
-// socket.destroy()
-// socket.resume()
-// events
+socket2.ondata = function(data) {
+  console.log("Socket2: " + data);
+}
 
 </script>
