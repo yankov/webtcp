@@ -11,11 +11,11 @@ var socket = new net.Socket("localhost", 6379);
 var socket2 = new net.Socket("127.0.0.1", 1337);
 
 socket.ondata = function(data) {
-  console.log("Socket1: " + data);
+  console.log("Socket 1" +  data.data);
 }
 
 socket2.ondata = function(data) {
-  console.log("Socket2: " + data);
+  console.log("Socket 2" + data.data);
 }
 
 </script>

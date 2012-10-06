@@ -24,30 +24,31 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   this.respond = function(data) {
     pck = this.packet;
     pck.data = data;
-
-    this.sockjsConn.write(pck);    
+    console.log(pck.sID);
+    this.sockjsConn.write( JSON.stringify(pck) );    
   }
 
   // when message comes from real socket
   // redirect it to a browser client
-  this.client.on('data', function(data) {
-    respond( data.toString() );
-  });
+  this.client.on('data', (function(that) { 
+    return function(data) {
+      that.respond( data.toString() );
+    }
+  })(this));
 
   // when message comes from a browser client 
-  this.onClientData = function(data) {
-    if (data == "CLOSE") {
-      // this.client.end();
-    }
-    else {
-      this.client.write(data.data);
-    }
-  }
+  this.onClientData = (function(that) { return function(data) {
+      if (data == "CLOSE") {
+        // this.client.end();
+      }
+      else {
+        that.client.write(data.data);
+      }
+    }})(this);
 
   // this.client.on('end', function() {
   //   console.log('client disconnected');
   // });
-
 }
 
 var echo = sockjs.createServer();
@@ -58,12 +59,12 @@ echo.on('connection', function(conn) {
     conn.on('data', function(message) {
         message = JSON.parse(message);
 
-        if (websockets[message.s_id]) {
-          websockets[message.s_id].onClientData(message);
+        if (websockets[message.sID]) {
+          websockets[message.sID].onClientData(message);
         }
         else {
-          socket = new Socket(conn, message.s_id, message.host, message.port);
-          websockets[message.s_id] = socket;
+          socket = new Socket(conn, message.sID, message.host, message.port);
+          websockets[message.sID] = socket;
           socket.onClientData(message);
         }
       
