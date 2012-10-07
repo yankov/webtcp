@@ -15,24 +15,31 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
     data: null
   }
 
-  this.client = net.connect(this.remotePort, this.remoteAddress,
-    (function(that) { return function() { 
-       that.respond("CONNECTED"); 
-    }})(this)
-  )
+  this.client = net.connect(this.remotePort, this.remoteAddress);
+
+  this.client.on('connect', (function(that) { return function() { 
+       // that.emitSockEvent("connect"); 
+    }})(this));
 
   this.respond = function(data) {
     pck = this.packet;
     pck.data = data;
-    console.log(pck.sID);
     this.sockjsConn.write( JSON.stringify(pck) );    
+  }
+
+  // trigger a socket's event on a client side
+  this.emitSockEvent = function(eventName, data) {
+    pck = this.packet;
+    pck.eventName = eventName;
+    pck.data = data;
+    this.sockjsConn.write( JSON.stringify(pck) );     
   }
 
   // when message comes from real socket
   // redirect it to a browser client
   this.client.on('data', (function(that) { 
     return function(data) {
-      that.respond( data.toString() );
+      that.emitSockEvent('data', data.toString() );
     }
   })(this));
 
@@ -50,7 +57,15 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   // notify browser about closed socket
   this.client.on('end', (function(that) { 
     return function(data) {
-      that.respond( "CLOSE" );
+      that.emitSockEvent("close"); 
+      delete websockets[that.remoteSocketId];
+    }
+  })(this));
+
+  //handle errors
+  this.client.on('error', (function(that) { 
+    return function(data) {
+      that.emitSockEvent('error', data);
     }
   })(this));
 
@@ -68,9 +83,15 @@ echo.on('connection', function(conn) {
           websockets[message.sID].onClientData(message);
         }
         else {
-          socket = new Socket(conn, message.sID, message.host, message.port);
-          websockets[message.sID] = socket;
-          socket.onClientData(message);
+          try {
+            console.log('inside');
+            socket = new Socket(conn, message.sID, message.host, message.port);
+            websockets[message.sID] = socket;
+            socket.onClientData(message);
+          } catch(e) {
+            console.log('in catch');
+            conn.write(JSON.stringify({sID:message.sID, data: "cannot connect tho"}));
+          }
         }
       
     });
