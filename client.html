@@ -18,8 +18,13 @@ socket2.on('data', function(data) {
   console.log("Socket 2 " +  data);
 });
 
-socket.on('close', function(data) {
+socket2.on('connect', function(){
+  console.log('Socket 2 connected');
+})
+
+socket2.on('close', function(data) {
   console.log("Socket 2 is closed ");
 });
+
 
 </script>

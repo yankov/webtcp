@@ -18,8 +18,8 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   this.client = net.connect(this.remotePort, this.remoteAddress);
 
   this.client.on('connect', (function(that) { return function() { 
-       // that.emitSockEvent("connect"); 
-    }})(this));
+    that.emitSockEvent("connect"); 
+  }})(this));
 
   this.respond = function(data) {
     pck = this.packet;
@@ -61,12 +61,7 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   // when message comes from a browser client 
   // write it to socket
   this.onClientData = (function(that) { return function(data) {
-      if (data == "CLOSE") {
-        // this.client.end();
-      }
-      else {
-        that.client.write(data.data);
-      }
+      that.client.write(data.data);
     }})(this);
 
 }
@@ -83,15 +78,9 @@ echo.on('connection', function(conn) {
           websockets[message.sID].onClientData(message);
         }
         else {
-          try {
-            console.log('inside');
-            socket = new Socket(conn, message.sID, message.host, message.port);
-            websockets[message.sID] = socket;
-            socket.onClientData(message);
-          } catch(e) {
-            console.log('in catch');
-            conn.write(JSON.stringify({sID:message.sID, data: "cannot connect tho"}));
-          }
+          socket = new Socket(conn, message.sID, message.host, message.port);
+          websockets[message.sID] = socket;
+          socket.onClientData(message);
         }
       
     });
