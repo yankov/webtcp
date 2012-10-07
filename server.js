@@ -3,6 +3,8 @@ var net = require('net');
 var sockjs = require('sockjs');
 
 var Socket = function(sockjsConn, remoteSocketId, host, port) {
+  var EVENTS = ["connect", "data", "end", "close", "timeout", "drain", "error"]
+
   this.sockjsConn = sockjsConn;
   this.remoteSocketId = remoteSocketId;
   this.remoteAddress = host;
@@ -16,55 +18,25 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
 
   this.client = net.connect(this.remotePort, this.remoteAddress);
 
-  this.client.on('connect', (function(that) { return function() { 
-    that.emitSockEvent("connect"); 
-  }})(this));
+  this.mapEvent = function(eventName) {
+    this.client.on(eventName, (function(that) { return function(data){
+      if(data) data = data.toString();
+      that.emitSockEvent(eventName, data); 
 
-  // when message comes from real socket
-  // redirect it to a browser client
-  this.client.on('data', (function(that) { 
-    return function(data) {
-      that.emitSockEvent('data', data.toString() );
-    }
-  })(this));
+      // also delete socket object if one of these events happened
+      if (["end", "close", "timeout"].indexOf(eventName) != -1) 
+        delete websockets[that.remoteSocketId];
 
-  // socket closed by remote side
-  this.client.on('end', (function(that) { 
-    return function(data) {
-      that.emitSockEvent("end"); 
-      delete websockets[that.remoteSocketId];
-    }
-  })(this));
+    }})(this));
+  }
 
-  // emitted when socket is fully closed
-  this.client.on('close', (function(that) { 
-    return function(data) {
-      that.emitSockEvent("close"); 
-      delete websockets[that.remoteSocketId];
-    }
-  })(this));
+  //map sock events to client's sock events
+  this.mapEvents = function(events) {
+    for(i in events) 
+      this.mapEvent.call(this, events[i]);
+  }
 
-  // emitted when socket times out from inactivity
-  this.client.on('timeout', (function(that) { 
-    return function(data) {
-      that.emitSockEvent("timeout"); 
-      delete websockets[that.remoteSocketId];
-    }
-  })(this));
-
-// emitted when the write buffer becomes empty. Can be used to throttle uploads.
-  this.client.on('drain', (function(that) { 
-    return function(data) {
-      that.emitSockEvent("drain"); 
-    }
-  })(this));
-
-  //handle errors
-  this.client.on('error', (function(that) { 
-    return function(data) {
-      that.emitSockEvent('error', data);
-    }
-  })(this));
+  this.mapEvents.call(this, EVENTS);
 
   // trigger a socket's event on a client side
   this.emitSockEvent = function(eventName, data) {
@@ -102,7 +74,6 @@ echo.on('connection', function(conn) {
     });
     
     conn.on('close', function() {});
-
 });
 
 var server = http.createServer();
