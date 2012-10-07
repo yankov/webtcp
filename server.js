@@ -43,13 +43,37 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
     }
   })(this));
 
-  // notify browser about closed socket
+  // socket closed by remote side
   this.client.on('end', (function(that) { 
+    return function(data) {
+      that.emitSockEvent("end"); 
+      delete websockets[that.remoteSocketId];
+    }
+  })(this));
+
+  // emitted when socket is fully closed
+  this.client.on('close', (function(that) { 
     return function(data) {
       that.emitSockEvent("close"); 
       delete websockets[that.remoteSocketId];
     }
   })(this));
+
+  // emitted when socket times out from inactivity
+  this.client.on('timeout', (function(that) { 
+    return function(data) {
+      that.emitSockEvent("timeout"); 
+      delete websockets[that.remoteSocketId];
+    }
+  })(this));
+
+// emitted when the write buffer becomes empty. Can be used to throttle uploads.
+  this.client.on('drain', (function(that) { 
+    return function(data) {
+      that.emitSockEvent("drain"); 
+    }
+  })(this));
+
 
   //handle errors
   this.client.on('error', (function(that) { 
