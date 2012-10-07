@@ -43,17 +43,6 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
     }
   })(this));
 
-  // when message comes from a browser client 
-  // write it to socket
-  this.onClientData = (function(that) { return function(data) {
-      if (data == "CLOSE") {
-        // this.client.end();
-      }
-      else {
-        that.client.write(data.data);
-      }
-    }})(this);
-
   // notify browser about closed socket
   this.client.on('end', (function(that) { 
     return function(data) {
@@ -68,6 +57,17 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
       that.emitSockEvent('error', data);
     }
   })(this));
+
+  // when message comes from a browser client 
+  // write it to socket
+  this.onClientData = (function(that) { return function(data) {
+      if (data == "CLOSE") {
+        // this.client.end();
+      }
+      else {
+        that.client.write(data.data);
+      }
+    }})(this);
 
 }
 
