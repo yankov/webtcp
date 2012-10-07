@@ -10,8 +10,7 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
 
   this.packet = {
     sID: this.remoteSocketId,
-    srcHost: this.remoteAddress,
-    srcPort: this.remotePort,
+    eventName: null,
     data: null
   }
 
@@ -20,20 +19,6 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   this.client.on('connect', (function(that) { return function() { 
     that.emitSockEvent("connect"); 
   }})(this));
-
-  this.respond = function(data) {
-    pck = this.packet;
-    pck.data = data;
-    this.sockjsConn.write( JSON.stringify(pck) );    
-  }
-
-  // trigger a socket's event on a client side
-  this.emitSockEvent = function(eventName, data) {
-    pck = this.packet;
-    pck.eventName = eventName;
-    pck.data = data;
-    this.sockjsConn.write( JSON.stringify(pck) );     
-  }
 
   // when message comes from real socket
   // redirect it to a browser client
@@ -74,13 +59,20 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
     }
   })(this));
 
-
   //handle errors
   this.client.on('error', (function(that) { 
     return function(data) {
       that.emitSockEvent('error', data);
     }
   })(this));
+
+  // trigger a socket's event on a client side
+  this.emitSockEvent = function(eventName, data) {
+    pck = this.packet;
+    pck.eventName = eventName;
+    pck.data = data;
+    this.sockjsConn.write( JSON.stringify(pck) );     
+  }
 
   // when message comes from a browser client 
   // write it to socket
