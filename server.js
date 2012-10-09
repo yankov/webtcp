@@ -112,15 +112,11 @@ echo.on('connection', function(conn) {
     conn.on('data', function(message) {
         message = JSON.parse(message);
 
-        if (websockets[message.sID]) {
-          websockets[message.sID].onClientData(message);
-        }
-        else {
-          socket = new Socket(conn, message.sID, message.host, message.port, message.options);
-          websockets[message.sID] = socket;
-          socket.onClientData(message);
-        }
-      
+        // create socket binding if it doesn't exist
+        if (!websockets[message.sID]) 
+          websockets[message.sID] = new Socket(conn, message.sID, message.host, message.port, message.options);
+
+        websockets[message.sID].onClientData(message);
     });
     
     conn.on('close', function() {});
