@@ -7,8 +7,16 @@ var redis_str = "*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n";
 
 var net = new WebTCP('localhost', 9999);
 
+options = {
+  encoding: "utf-8",
+  timeout: 0,
+  noDelay: true, // disable/enable Nagle algorithm
+  keepAlive: false, //default is false
+  initialDelay: 0 // for keepAlive. default is 0
+}
+
 var socket = new net.Socket("localhost", 6379);
-var socket2 = new net.Socket("127.0.0.1", 1337);
+var socket2 = new net.Socket("127.0.0.1", 1337, options);
 
 socket.on('data', function(data) {
   console.log("Socket 1 " +  data);

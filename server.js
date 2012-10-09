@@ -2,7 +2,7 @@ var http = require('http');
 var net = require('net');
 var sockjs = require('sockjs');
 
-var Socket = function(sockjsConn, remoteSocketId, host, port) {
+var Socket = function(sockjsConn, remoteSocketId, host, port, options) {
   var EVENTS = ["connect", "data", "end", "close", "timeout", "drain", "error"]
 
   this.sockjsConn = sockjsConn;
@@ -10,13 +10,41 @@ var Socket = function(sockjsConn, remoteSocketId, host, port) {
   this.remoteAddress = host;
   this.remotePort = port;
 
+  this.options = {
+    //Makes the 'data' event emit a string instead of a Buffer.
+    //Can be 'utf8', 'utf16le' ('ucs2'), 'ascii', or 'hex'
+    encoding: options.encoding || 'utf8', 
+
+    //Sets the socket to timeout after timeout milliseconds of inactivity on the socket
+    timeout: options.timeout || 0,
+
+    //Disables the Nagle algorithm
+    noDelay: options.noDelay || true, 
+
+    keepAlive: options.keepAlive || false, 
+
+    //Set the delay between the last data packet received and the first keepalive probe
+    initialDelay: options.initialDelay || 0
+  }
+
   this.packet = {
     sID: this.remoteSocketId,
     eventName: null,
     data: null
   }
 
-  this.client = net.connect(this.remotePort, this.remoteAddress);
+  this.setOptions = function() {
+    this.client.setEncoding(this.options.encoding);
+    this.client.setTimeout(this.options.timeout);
+    this.client.setNoDelay(this.options.noDelay);
+    this.client.setKeepAlive(this.options.keepAlive, this.options.initialDelay);
+  }
+
+  this.client = new net.Socket();
+  this.client.connect(this.remotePort, this.remoteAddress, (function(that) {
+    return function() { that.setOptions.call(that) }
+  }(this)));
+
 
   this.mapEvent = function(eventName) {
     this.client.on(eventName, (function(that) { return function(data){
@@ -66,7 +94,7 @@ echo.on('connection', function(conn) {
           websockets[message.sID].onClientData(message);
         }
         else {
-          socket = new Socket(conn, message.sID, message.host, message.port);
+          socket = new Socket(conn, message.sID, message.host, message.port, message.options);
           websockets[message.sID] = socket;
           socket.onClientData(message);
         }
