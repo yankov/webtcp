@@ -27,10 +27,12 @@ var Socket = function(sockjsConn, remoteSocketId, host, port, options) {
     initialDelay: options.initialDelay || 0
   }
 
-  this.packet = {
-    sID: this.remoteSocketId,
-    eventName: null,
-    data: null
+  this.createPacket = function() { 
+    return {
+      sID: this.remoteSocketId,
+      eventName: null,
+      data: null
+    }
   }
 
   this.setOptions = function() {
@@ -68,18 +70,38 @@ var Socket = function(sockjsConn, remoteSocketId, host, port, options) {
 
   // trigger a socket's event on a client side
   this.emitSockEvent = function(eventName, data) {
-    pck = this.packet;
+    var pck = this.createPacket();
     pck.eventName = eventName;
     pck.data = data;
     this.sockjsConn.write( JSON.stringify(pck) );     
   }
 
+  this.sendSockOpts = function() {
+    var sockOpts = {
+      _pendingWriteReqs: this.client._pendingWriteReqs,
+      _connectQueueSize: this.client._connectQueueSize,
+      destroyed:         this.client.destroyed,
+      errorEmitted:      this.client.errorEmitted,
+      bytesRead:         this.client.bytesRead,
+      bytesWritten:      this.client.bytesWritten,
+      allowHalfOpen:     this.client.allowHalfOpen,
+      _connecting:       this.client._connecting,
+      writable:          this.client.writable,
+      readable:          this.client.readable,
+    }
+
+    this.emitSockEvent("SockOptsRcv", sockOpts); 
+  }
+
   // when message comes from a browser client 
   // write it to socket
   this.onClientData = (function(that) { return function(data) {
-      that.client.write(data.data);
+      if (data.command && data.command == "getSockOpts") {
+        that.sendSockOpts.call(that);
+      } else {
+        that.client.write(data.data);  
+      }
     }})(this);
-
 }
 
 var echo = sockjs.createServer();
