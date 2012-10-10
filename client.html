@@ -3,8 +3,6 @@
 
 <script>
 
-var redis_str = "*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n";
-
 var net = new WebTCP('localhost', 9999);
 
 options = {
@@ -15,24 +13,22 @@ options = {
   initialDelay: 0 // for keepAlive. default is 0
 }
 
-var socket = new net.Socket("localhost", 6379);
-var socket2 = new net.Socket("127.0.0.1", 1337, options);
+var socket = new net.Socket("127.0.0.1", 1337, options);
 
 socket.on('data', function(data) {
-  console.log("Socket 1 " +  data);
-});
-
-socket2.on('data', function(data) {
   console.log("Socket 2 " +  data);
 });
 
-socket2.on('connect', function(){
+socket.on('connect', function(){
   console.log('Socket 2 connected');
 })
 
-socket2.on('end', function(data) {
+socket.on('end', function(data) {
   console.log("Socket 2 is closed ");
 });
+
+// send a message to echo server
+socket.write("hello world");
 
 
 </script>
