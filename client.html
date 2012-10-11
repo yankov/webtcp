@@ -15,20 +15,20 @@ options = {
 
 var socket = new net.Socket("127.0.0.1", 1337, options);
 
+// send a message to echo server
+socket.write("hello world");
+
 socket.on('data', function(data) {
-  console.log("Socket 2 " +  data);
+  console.log("received: " + data);
 });
 
 socket.on('connect', function(){
-  console.log('Socket 2 connected');
+  console.log('connected');
 })
 
 socket.on('end', function(data) {
-  console.log("Socket 2 is closed ");
+  console.log("socket is closed ");
 });
-
-// send a message to echo server
-socket.write("hello world");
 
 
 </script>

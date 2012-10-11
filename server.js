@@ -109,17 +109,17 @@ var websockets = {};
 
 echo.on('connection', function(conn) {
 
-    conn.on('data', function(message) {
-        message = JSON.parse(message);
+  conn.on('data', function(message) {
+    message = JSON.parse(message);
 
-        // create socket binding if it doesn't exist
-        if (!websockets[message.sID]) 
-          websockets[message.sID] = new Socket(conn, message.sID, message.host, message.port, message.options);
+    // create socket binding if it doesn't exist
+    if (!websockets[message.sID]) 
+      websockets[message.sID] = new Socket(conn, message.sID, message.host, message.port, message.options);
 
-        websockets[message.sID].onClientData(message);
-    });
-    
-    conn.on('close', function() {});
+    websockets[message.sID].onClientData(message);
+  });
+  
+  conn.on('close', function() {});
 });
 
 var server = http.createServer();
