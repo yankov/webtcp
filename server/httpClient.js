@@ -1,3 +1,5 @@
+var http = require('http');
+
 module.exports.httpClient = function(sockjsConn, cID) {
   var EVENTS = ["connect", "data", "end", "close", "upgrade", "continue"];
 

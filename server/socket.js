@@ -1,6 +1,8 @@
+var net = require('net');
+
 module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options) {
   var EVENTS = ["connect", "data", "end", "close", "timeout", "drain", "error"];
-  
+
   this.sockjsConn = sockjsConn;
   this.remoteSocketId = remoteSocketId;
   this.remoteAddress = host;
