@@ -13,6 +13,7 @@ options = {
   initialDelay: 0 // for keepAlive. default is 0
 }
 
+// Socket example 
 var socket = new net.Socket("127.0.0.1", 1337, options);
 
 // send a message to echo server
@@ -30,5 +31,11 @@ socket.on('end', function(data) {
   console.log("socket is closed ");
 });
 
+// HTTP example
+var client = new net.Http();
+
+client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
+  console.log(res);
+});
 
 </script>
