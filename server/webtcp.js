@@ -14,8 +14,6 @@ module.exports.WebTCP = function() {
     conn.on('data', function(message) {
       self.dispatch.call(self, conn, message);
     });
-    
-    conn.on('close', function() {});
   });
 
   // client's message processor

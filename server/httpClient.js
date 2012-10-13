@@ -1,5 +1,6 @@
 var net = require('net');
 var http = require('http');
+var clientEvents = require('./client_events.js').clientEvents;
 
 module.exports.httpClient = function(sockjsConn, cID) {
   var EVENTS = ["connect", "data", "end", "close", "upgrade", "continue"];
@@ -16,8 +17,7 @@ module.exports.httpClient = function(sockjsConn, cID) {
     }
   }
 
-  // how to refactor this?
-  this.get = function(data){
+  this.httpGet = function(data){
     var _data = data;
 
     http.get(data, function(res) {
@@ -32,20 +32,6 @@ module.exports.httpClient = function(sockjsConn, cID) {
     });
   }
 
-  this.onClientData = function(data) {
-    if (data.command && data.command == "httpGet") {
-      this.get(data.args);
-    } else if (data.command && data.command == "httpPost") {
-      this.post(data);  
-    }
-  };
-
-
-  // trigger a socket's event on a client side
-  this.emitClientEvent = function(eventName, data) {
-    var pck = this.createPacket();
-    pck.eventName = eventName;
-    pck.data = data;
-    this.sockjsConn.write( JSON.stringify(pck) );     
-  }
 }
+
+module.exports.httpClient.prototype = new clientEvents();

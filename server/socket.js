@@ -1,4 +1,5 @@
 var net = require('net');
+var clientEvents = require('./client_events.js').clientEvents;
 
 module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options) {
   var EVENTS = ["connect", "data", "end", "close", "timeout", "drain", "error"];
@@ -51,7 +52,7 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
   this.mapEvent = function(eventName) {
     this.client.on(eventName, function(data){
       if(data) data = data.toString();
-      self.emitSockEvent(eventName, data); 
+      self.emitClientEvent(eventName, data); 
 
       // also delete socket object if one of these events happened
       if (["end", "close", "timeout"].indexOf(eventName) != -1) 
@@ -68,15 +69,7 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
 
   this.mapEvents.call(this, EVENTS);
 
-  // trigger a socket's event on a client side
-  this.emitSockEvent = function(eventName, data) {
-    var pck = this.createPacket();
-    pck.eventName = eventName;
-    pck.data = data;
-    this.sockjsConn.write( JSON.stringify(pck) );     
-  }
-
-  this.sendSockOpts = function() {
+  this.getSockOpts = function() {
     var sockOpts = {
       _pendingWriteReqs: this.client._pendingWriteReqs,
       _connectQueueSize: this.client._connectQueueSize,
@@ -90,16 +83,9 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
       readable:          this.client.readable,
     }
 
-    this.emitSockEvent("SockOptsRcv", sockOpts); 
+    this.emitClientEvent("SockOptsRcv", sockOpts); 
   }
 
-  // when message comes from a browser client 
-  // write it to socket
-  this.onClientData = function(data) {
-    if (data.command && data.command == "getSockOpts") {
-      this.sendSockOpts();
-    } else {
-      this.client.write(data.data);  
-    }
-  };
 }
+
+module.exports.Socket.prototype = new clientEvents();
