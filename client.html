@@ -32,7 +32,7 @@ socket.on('end', function(data) {
 });
 
 // HTTP example
-var client = new net.Http();
+var client = net.createHTTPClient();
 
 client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
   console.log(res);
