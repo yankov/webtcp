@@ -39,12 +39,10 @@ module.exports.WebTCP = function() {
     }
   }
 
-  this.listen = (function(that) {
-    return function(port, host) {
-      this.server = http.createServer();
-      this.sockjsServer.installHandlers(this.server, { prefix: '/bridge' });
-      this.server.listen(port, host);
-    }
-  }(this))
+  this.listen = function(port, host) {
+    this.server = http.createServer();
+    this.sockjsServer.installHandlers(this.server, { prefix: '/bridge' });
+    this.server.listen(port, host);
+  }
   
 }

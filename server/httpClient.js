@@ -1,3 +1,4 @@
+var net = require('net');
 var http = require('http');
 
 module.exports.httpClient = function(sockjsConn, cID) {
@@ -5,6 +6,7 @@ module.exports.httpClient = function(sockjsConn, cID) {
 
   this.sockjsConn = sockjsConn;
   this.cID = cID;
+  var self = this;
 
   this.createPacket = function() { 
     return {
@@ -16,29 +18,27 @@ module.exports.httpClient = function(sockjsConn, cID) {
 
   // how to refactor this?
   this.get = function(data){
-    http.get(data, (function(that, data) {
-      return function(res) {
-        res.setEncoding(data.encoding || 'utf8');
+    var _data = data;
 
-        res.on('data', (function(that) {
-          return function(data) {
-            that.emitClientEvent("data", data);    
-          }
-        }(that)));        
+    http.get(data, function(res) {
+      res.setEncoding(_data.encoding || 'utf8');
+
+      res.on('data', function(data) {
+        self.emitClientEvent("data", data);    
+      });        
         
-    }}(this, data))).on('error', (function(that) { 
-      return function(e) {
-        that.emitClientEvent("data", {error: e});    
-    }}(this)));
+    }).on('error', function(e) {
+      self.emitClientEvent("data", {error: e});    
+    });
   }
 
-  this.onClientData = (function(that) { return function(data) {
-      if (data.command && data.command == "httpGet") {
-        that.get.call(that, data.args);
-      } else if (data.command && data.command == "httpPost") {
-        that.post.call(that, data);  
-      }
-    }})(this);
+  this.onClientData = function(data) {
+    if (data.command && data.command == "httpGet") {
+      this.get(data.args);
+    } else if (data.command && data.command == "httpPost") {
+      this.post(data);  
+    }
+  };
 
 
   // trigger a socket's event on a client side

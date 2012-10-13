@@ -8,6 +8,7 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
   this.remoteAddress = host;
   this.remotePort = port;
 
+  var self = this;
 
   this.options = {
     //Makes the 'data' event emit a string instead of a Buffer.
@@ -42,21 +43,21 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
   }
 
   this.client = new net.Socket();
-  this.client.connect(this.remotePort, this.remoteAddress, (function(that) {
-    return function() { that.setOptions.call(that) }
-  }(this)));
+  this.client.connect(this.remotePort, this.remoteAddress, function() { 
+    self.setOptions();
+  });
 
 
   this.mapEvent = function(eventName) {
-    this.client.on(eventName, (function(that) { return function(data){
+    this.client.on(eventName, function(data){
       if(data) data = data.toString();
-      that.emitSockEvent(eventName, data); 
+      self.emitSockEvent(eventName, data); 
 
       // also delete socket object if one of these events happened
       if (["end", "close", "timeout"].indexOf(eventName) != -1) 
-        delete websockets[that.remoteSocketId];
+        delete websockets[self.remoteSocketId];
 
-    }})(this));
+    });
   }
 
   //map sock events to client's sock events
@@ -94,11 +95,11 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
 
   // when message comes from a browser client 
   // write it to socket
-  this.onClientData = (function(that) { return function(data) {
-      if (data.command && data.command == "getSockOpts") {
-        that.sendSockOpts.call(that);
-      } else {
-        that.client.write(data.data);  
-      }
-    }})(this);
+  this.onClientData = function(data) {
+    if (data.command && data.command == "getSockOpts") {
+      this.sendSockOpts();
+    } else {
+      this.client.write(data.data);  
+    }
+  };
 }
