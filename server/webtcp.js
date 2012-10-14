@@ -12,7 +12,7 @@ module.exports.WebTCP = function() {
 
   this.sockjsServer.on('connection', function(conn) {
     conn.on('data', function(message) {
-      self.dispatch.call(self, conn, message);
+      self.dispatch(conn, message);
     });
   });
 
