@@ -14,7 +14,7 @@ options = {
 }
 
 // Socket example 
-var socket = new net.Socket("127.0.0.1", 1337, options);
+var socket = net.createSocket("127.0.0.1", 1337, options);
 
 // send a message to echo server
 socket.write("hello world");

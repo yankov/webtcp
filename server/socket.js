@@ -8,7 +8,8 @@ module.exports.Socket = function(sockjsConn, remoteSocketId, host, port, options
   this.remoteSocketId = remoteSocketId;
   this.remoteAddress = host;
   this.remotePort = port;
-
+  options = options || {};
+  
   var self = this;
 
   this.options = {
