@@ -1,6 +1,6 @@
 /*
   This is a simple TCP echo server for tests.
-  Run this server and then open examples/http_client.html 
+  Run this server and then open examples/socket_client.html 
   in your browser.
 */
 

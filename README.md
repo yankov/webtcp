@@ -54,7 +54,7 @@ To send data simply use write function
 
 `socket.write("hi")`  
 
-Standard event handlers  
+**Standard event handlers**  
 
     // On connection callback
     socket.on('connect', function(){
