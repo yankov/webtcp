@@ -18,8 +18,9 @@ I don't know, but you can do interesting things like:
 * create client libraries to interract with any TCP servers 'directly' from your browser: Redis, Memcached, MySQL, MongoDB, etc.
 * make GET/POST queries to any destination regardless of same-origin policy. 
 
-Installing and running examples
-===============================
+Install and run
+===============
+
 Assuming you have `node.js` and `npm` installed:
 
 **Clone the repo**  
@@ -32,12 +33,20 @@ Assuming you have `node.js` and `npm` installed:
 **Run the server**  
 `cd examples && node server`  
 
-**Run example of TCP echo server (if you don't want to use your own)**  
-`cd examples && node tcp_server`  
-
 **Open client examples in the browser**  
-`examples/socket_client.html` for socket examples  
-`examples/http_client.html` for http requests examples
+`examples/http_client.html` for http requests examples 
+
+
+Examples
+========
+
+**TCP echo server**
+
+`cd examples && node tcp_server` run example server
+`examples/socket_client.html` open in the browser 
+
+
+
 
 How to use it
 =============  
