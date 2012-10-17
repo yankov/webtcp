@@ -43,8 +43,8 @@ Examples
 **TCP echo server**
 
 `cd examples && node tcp_server` run example server
-`examples/socket_client.html` open in the browser 
 
+`examples/socket_client.html` open in the browser 
 
 
 
