@@ -30,10 +30,15 @@ socket.on('end', function(data) {
   console.log("socket is closed ");
 });
 
-// HTTP example
+// HTTP GET example
 var client = net.createHTTPClient();
 
 client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
+  console.log(res);
+});
+
+// HTTP POST example
+client.post({ host: 'news.ycombinator.com', port: 80 }, {param: 1}, function(res) {
   console.log(res);
 });
 
