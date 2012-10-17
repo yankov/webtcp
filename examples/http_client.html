@@ -1,18 +1,26 @@
-<script src="../lib/client/webtcp-min.js"></script>
+<script src="../lib/client/webtcp-0.0.1.min.js"></script>
 
 <script>
 
+/*
+This is a HTTP client example. Currently only GET and POST 
+requests are supported.  
+*/
+
+// Create a sockjs tunnel. You'll need only one for all your HTTP
+// clients and requests.
 var net = new WebTCP('localhost', 9999);
 
-// GET request
+// Create a HTTP client which can send GET/POST requests
 var client = net.createHTTPClient();
 
+// GET request
 client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
   console.log(res);
 });
 
 // POST request
-client.post({ host: 'news.ycombinator.com', port: 80 }, {param: 1}, function(res) {
+client.post({ host: 'news.ycombinator.com', port: 80 }, { param: 1 }, function(res) {
   console.log(res);
 });
 
