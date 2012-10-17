@@ -8,7 +8,7 @@ How does it work
 Client and server (bridge) communicate through [SockJS](https://github.com/sockjs/sockjs-node) connection. When browser
 wants to create a TCP socket it sends a command to the bridge. Bridge creates a real TCP socket connection and maps all the events 
 that happen on this socket to a client's socket object. For example, when data is received bridge will trigger a data event on 
-according socket object on a browser side. Screw my writings, here's the picture:  
+according socket object on a browser side. **Screw my writings, here's the picture**:  
 ![diagram](http://pix.am/kSZT.png)
 
 Why would anyone need that
@@ -25,7 +25,7 @@ Assuming you have `node.js` and `npm` installed:
 **Clone the repo**  
 `git clone https://github.com/yankov/webtcp`  
 
-**Install dependencies**
+**Install dependencies**  
 `cd webtcp`  
 `npm install` 
 
@@ -36,7 +36,7 @@ Assuming you have `node.js` and `npm` installed:
 `cd examples && node tcp_server`  
 
 **Open client examples in the browser**  
-`examples/socket_client.html` for socket examples
+`examples/socket_client.html` for socket examples  
 `examples/http_client.html` for http requests examples
 
 How to use it
@@ -56,29 +56,29 @@ To send data simply use write function
 
 Standard event handlers  
 
-  // On connection callback
-  socket.on('connect', function(){
-    console.log('connected');
-  })
-  
-  // This gets called every time new data for this socket is received
-  socket.on('data', function(data) {
-    console.log("received: " + data);
-  });
-  
-  socket.on('end', function(data) {
-    console.log("socket is closed ");
-  });
+    // On connection callback
+    socket.on('connect', function(){
+      console.log('connected');
+    })
+    
+    // This gets called every time new data for this socket is received
+    socket.on('data', function(data) {
+      console.log("received: " + data);
+    });
+    
+    socket.on('end', function(data) {
+      console.log("socket is closed ");
+    });
 
 It's also possible to specify advanced options when creating a socket connection  
 
-  options = {
-    encoding: "utf-8",
-    timeout: 0,
-    noDelay: true, // disable/enable Nagle algorithm
-    keepAlive: false, //default is false
-    initialDelay: 0 // for keepAlive. default is 0
-  }
+    options = {
+      encoding: "utf-8",
+      timeout: 0,
+      noDelay: true, // disable/enable Nagle algorithm
+      keepAlive: false, //default is false
+      initialDelay: 0 // for keepAlive. default is 0
+    }
 
 And then pass those options when creating socket  
 
@@ -94,15 +94,15 @@ Making HTTP request is pretty straightforward.
 
 **GET request**  
 
-  client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
-    console.log(res);
-  });
+    client.get({ host: 'news.ycombinator.com', port: 80 }, function(res) {
+      console.log(res);
+    });
   
 **POST request**  
 
-  client.post({ host: 'news.ycombinator.com', port: 80 }, { param: 1 }, function(res) {
-    console.log(res);
-  });
+    client.post({ host: 'news.ycombinator.com', port: 80 }, { param: 1 }, function(res) {
+      console.log(res);
+    });
 
 TODO
 ====
