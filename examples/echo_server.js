@@ -12,10 +12,10 @@ var server = net.createServer(function (socket) {
 });
 
 server.listen(1337, "127.0.0.1", function() {
-     address = server.address();
-     console.log("opened server on %j", address);
+  address = server.address();
+  console.log("opened server on %j", address);
 });
 
 server.on('connection', function (stream) {
-     console.log('New connection ' + stream.remoteAddress);
+  console.log('New connection ' + stream.remoteAddress);
 });
