@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# compiler.jar is a google closure compiler 
+# If you change code in lib/client/src you need to recompile
+# webtcp-0.0.1.min.js by running this script. 
+
+# You DO NOT need to run this script if you didn't change code of the client library
+
+java -jar compiler.jar --js ./lib/client/src/*.js --js_output_file ./lib/client/webtcp-0.0.1.min.js

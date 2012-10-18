@@ -30,7 +30,7 @@ Assuming you have `node.js` and `npm` installed:
 `cd webtcp`  
 `npm install` 
 
-**Run the server**  
+**Run WebTCP server**  
 `cd examples && node server`  
 
 
