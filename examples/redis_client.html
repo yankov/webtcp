@@ -15,5 +15,13 @@ redis.send("incr a", function(res) {
   console.log(res);
 });
 
+// subscribing to multiple channels in one command
+// is not supported yet, but you can subscribe 
+// to channels one by one
+redis.send("subscribe ch1", function(res) {
+  console.log(res);
+});
+
+
 
 </script>
