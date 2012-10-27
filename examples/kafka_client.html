@@ -8,8 +8,6 @@ var net = new WebTCP('127.0.0.1', 9999);
 
 var kafka = new Kafka(net, "127.0.0.1", 9092);
 
-kafka.send("hello world", function(res) {
-  console.log(res);
-});
+kafka.send("hello world", "test", 0);
 
 </script>
