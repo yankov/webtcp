@@ -1,13 +1,42 @@
 <script src="../lib/client/webtcp-0.0.1.min.js"></script>
 <script src="../lib/client/kafka/std.js"></script>
-<script src="../lib/client/kafka/kafka.js"></script>
+<!-- <script src="../lib/client/kafka/kafka.js"></script> -->
+
+<script src="../lib/client/kafkajs/requestTypes.js"></script>
+<script src="../lib/client/kafkajs/error.js"></script>
+<script src="../lib/client/kafkajs/Connection.js"></script>
+<script src="../lib/client/kafkajs/Client.js"></script>
+<script src="../lib/client/kafkajs/Consumer.js"></script>
+<script src="../lib/client/kafkajs/Producer.js"></script>
+
 <script>
 
 // Kafka client example
 var net = new WebTCP('127.0.0.1', 9999);
 
-var kafka = new Kafka(net, "127.0.0.1", 9092);
+// var kafka = new Kafka(net, "127.0.0.1", 9092);
 
-kafka.send("hello world", "test", 0);
+// // Producer example 
+// // publish message to a topic "test"
+// kafka.send("hello world!", "test", 0);
+
+// // Consumer example
+
+// kafka.subscribeTopic({name: 'test', partition: 0}, function(res) {
+
+// })
+
+// ===========================
+// Exaples like for node-kafka
+
+// new Consumer().connect().subscribeTopic('test').on('message', function(topic, message) {
+//     console.log("Consumed message:", message)
+// })
+
+var producer = new Producer().connect().on('connect', function() {
+  producer.send("hey!")
+  producer.close()
+})
+
 
 </script>
