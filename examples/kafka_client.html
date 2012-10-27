@@ -1,0 +1,15 @@
+<script src="../lib/client/webtcp-0.0.1.min.js"></script>
+<script src="../lib/client/kafka/std.js"></script>
+<script src="../lib/client/kafka/kafka.js"></script>
+<script>
+
+// Kafka client example
+var net = new WebTCP('127.0.0.1', 9999);
+
+var kafka = new Kafka(net, "127.0.0.1", 9092);
+
+kafka.send("hello world", function(res) {
+  console.log(res);
+});
+
+</script>
