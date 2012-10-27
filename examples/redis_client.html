@@ -15,10 +15,13 @@ redis.send("incr a", function(res) {
   console.log(res);
 });
 
-redis.send("subscribe ch1", function(res) {
+redis.send("incr a", function(res) {
   console.log(res);
 });
 
+redis.send("subscribe ch1", function(res) {
+  console.log(res);
+});
 
 
 </script>
