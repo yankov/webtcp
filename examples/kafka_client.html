@@ -1,18 +1,14 @@
 <script src="../lib/client/webtcp-0.0.1.min.js"></script>
-<script src="../lib/client/kafka/std.js"></script>
+<!-- <script src="../lib/client/kafka/std.js"></script> -->
 <!-- <script src="../lib/client/kafka/kafka.js"></script> -->
 
-<script src="../lib/client/kafkajs/requestTypes.js"></script>
-<script src="../lib/client/kafkajs/error.js"></script>
-<script src="../lib/client/kafkajs/Connection.js"></script>
-<script src="../lib/client/kafkajs/Client.js"></script>
-<script src="../lib/client/kafkajs/Consumer.js"></script>
-<script src="../lib/client/kafkajs/Producer.js"></script>
-
+<script src="../lib/client/kafka2/buffer.js"></script>
+<script src="../lib/client/kafka2/bundle.js"></script>
 <script>
 
 // Kafka client example
 var net = new WebTCP('127.0.0.1', 9999);
+var Buffer = require('buffer').Buffer;
 
 // var kafka = new Kafka(net, "127.0.0.1", 9092);
 
@@ -26,17 +22,38 @@ var net = new WebTCP('127.0.0.1', 9999);
 
 // })
 
-// ===========================
-// Exaples like for node-kafka
 
-// new Consumer().connect().subscribeTopic('test').on('message', function(topic, message) {
-//     console.log("Consumed message:", message)
+// var kafka = require('kafka');
+
+// var producer = new kafka.Producer({
+//     // these are also the default values
+//     host:         '127.0.0.1',
+//     port:         9092,
+//     topic:        'test',
+//     partition:    0
+// })
+// producer.connect(function() {
+//     producer.send('message bytes')
 // })
 
-var producer = new Producer().connect().on('connect', function() {
-  producer.send("hey!")
-  producer.close()
+var consumer = new kafka.Consumer({
+  // these are the default values
+  host:         'localhost',
+  port:          9092,
+  pollInterval:  2000,
+  maxSize:       1048576 // 1MB
 })
 
+consumer.on('message', function(topic, message) { 
+  console.log('reply:')
+  console.log(message)
+})
+
+consumer.connect();
+
+// consumer.connect(function() {
+//   consonle.log('connected')
+//   consumer.subscribeTopic({name: 'test', partition: 0})
+// })
 
 </script>
