@@ -1,40 +1,9 @@
 <script src="../lib/client/webtcp-0.0.1.min.js"></script>
-<!-- <script src="../lib/client/kafka/std.js"></script> -->
-<!-- <script src="../lib/client/kafka/kafka.js"></script> -->
+<script src="../lib/client/src/kafka.js"></script>
 
-<script src="../lib/client/kafka2/buffer.js"></script>
-<script src="../lib/client/kafka2/bundle.js"></script>
 <script>
-
 // Kafka client example
 var net = new WebTCP('127.0.0.1', 9999);
-var Buffer = require('buffer').Buffer;
-
-// var kafka = new Kafka(net, "127.0.0.1", 9092);
-
-// // Producer example 
-// // publish message to a topic "test"
-// kafka.send("hello world!", "test", 0);
-
-// // Consumer example
-
-// kafka.subscribeTopic({name: 'test', partition: 0}, function(res) {
-
-// })
-
-
-// var kafka = require('kafka');
-
-// var producer = new kafka.Producer({
-//     // these are also the default values
-//     host:         '127.0.0.1',
-//     port:         9092,
-//     topic:        'test',
-//     partition:    0
-// })
-// producer.connect(function() {
-//     producer.send('message bytes')
-// })
 
 var consumer = new kafka.Consumer({
   // these are the default values
@@ -49,11 +18,10 @@ consumer.on('message', function(topic, message) {
   console.log(message)
 })
 
-consumer.connect();
+consumer.connect(function(){
+  console.log('connected')
+});
 
-// consumer.connect(function() {
-//   consonle.log('connected')
-//   consumer.subscribeTopic({name: 'test', partition: 0})
-// })
+consumer.subscribeTopic({name: 'newtest', partition: 0})
 
 </script>
