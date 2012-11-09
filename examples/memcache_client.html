@@ -2,7 +2,7 @@
 <script src="../lib/client/memcache.js"></script>
 <script>
 
-// Redis client example
+// Memcache client example
 var tcp = new WebTCP('127.0.0.1', 9999);
 
 var client = new memcache.Client(11211, "127.0.0.1");
@@ -17,11 +17,9 @@ client.on('close', function(){
    console.log('closed')
 });
 
-
-// client.set('key', 'value', function(error, result){
-//   console.log(error);
-//   console.log(result); 
-// });
+client.set('foo', 'some value', function(error, result){
+  console.log(result); 
+});
 
 
 client.get('foo', function(error, result){
