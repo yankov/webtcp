@@ -1,0 +1,5 @@
+This is webtcp client library. 
+
+These files get compiled into one webtcp-0.0.1.min.js file.
+If you change any one of them, you should run compile-js to recompile.
+Or you have to include every one of these files individually on your page.

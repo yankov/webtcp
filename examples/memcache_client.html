@@ -3,6 +3,8 @@
 <script>
 
 // Memcache client example
+// More examples can be found here: https://github.com/elbart/node-memcache
+
 var tcp = new WebTCP('127.0.0.1', 9999);
 
 var client = new memcache.Client(11211, "127.0.0.1");
@@ -24,6 +26,10 @@ client.set('foo', 'some value', function(error, result){
 
 client.get('foo', function(error, result){
    console.log(result);
+});
+
+client.version(function(error, result){
+  console.log(result);
 });
 
 </script>
