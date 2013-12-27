@@ -9,7 +9,7 @@ Client and server (bridge) communicate through [SockJS](https://github.com/sockj
 wants to create a TCP socket it sends a command to the bridge. Bridge creates a real TCP socket connection and maps all the events 
 that happen on this socket to a client's socket object. For example, when data is received bridge will trigger a data event on 
 according socket object on a browser side. **Screw my writings, here's the picture**:  
-![diagram](http://pix.am/kSZT.png)
+![diagram](http://artemyankov.com/images/webtcp.jpg)
 
 Why would anyone need that
 ==========================
