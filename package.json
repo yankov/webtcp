@@ -9,7 +9,7 @@
     "url": "git://github.com/yankov/webtcp.git"
   },
   "dependencies": {
-    "sockjs": "0.3.3"
+    "sockjs": "0.3.8"
   },
   "bugs": {
     "url": "http://github.com/yankov/webtcp/issues"
